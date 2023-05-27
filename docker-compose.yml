@@ -6,8 +6,7 @@ services:
       context: .
       dockerfile: ./docker/amd64/Dockerfile.takserver-db
     volumes:
-      - "db_data:/var/lib/postgresql/data:z"
-      - "./tak:/opt/tak:z"
+      - "db_data:/var/lib/postgresql/data"
     networks:
       tak:
         aliases:
@@ -21,9 +20,9 @@ services:
       dockerfile: ./docker/amd64/Dockerfile.takserver
     env_file:
       - .env
-    volumes:
-      - "./tak:/opt/tak:z"
     ports:
+      - "8080:8080"
+      - "8087:8087"
       - "8443:8443"
       - "8444:8444"
       - "8446:8446"

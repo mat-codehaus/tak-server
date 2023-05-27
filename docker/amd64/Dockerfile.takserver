@@ -2,4 +2,6 @@ FROM openjdk:11-jdk-bullseye
 RUN apt update && \
 	apt-get install -y emacs-nox net-tools netcat vim
 
+COPY ./tak /opt/tak
+
 ENTRYPOINT ["/bin/bash", "-c", "/opt/tak/configureInDocker.sh init &>> /opt/tak/logs/takserver.log"]

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Configuration xmlns="http://bbn.com/marti/xml/config">
     <network multicastTTL="5" serverId="f6edbf55ccfa4af1b4cfa2d7f177ea67" version="4.7-RELEASE-18-HEAD">
-        <!-- <input auth="anonymous" _name="stdtcp" protocol="tcp" port="8087"/>
-        <input auth="anonymous" _name="stdudp" protocol="udp" port="8087"/>
+        <input auth="anonymous" _name="stdtcp" protocol="tcp" port="8087"/>
+        <!-- <input auth="anonymous" _name="stdudp" protocol="udp" port="8087"/>
         <input auth="anonymous" _name="streamtcp" protocol="stcp" port="8088"/> -->
         <input _name="stdssl" protocol="tls" port="8089"/>
         <connector port="8443" _name="https"/>
@@ -70,7 +70,7 @@
     <security>
         <tls keystore="JKS" keystoreFile="/opt/tak/certs/files/takserver.jks" keystorePass="atakatak" truststore="JKS" truststoreFile="/opt/tak/certs/files/truststore-root.jks" truststorePass="atakatak" context="TLSv1.2" keymanager="SunX509"/>
     </security>
-    <federation missionFederationDisruptionToleranceRecencySeconds="43200">
+    <!-- <federation missionFederationDisruptionToleranceRecencySeconds="43200">
         <federation-server webBaseUrl="https://HOSTIP:8443/Marti">
             <tls keystore="JKS" keystoreFile="/opt/tak/certs/files/takserver.jks" keystorePass="atakatak" truststore="JKS" truststoreFile="certs/files/fed-truststore.jks" truststorePass="atakatak" keymanager="SunX509"/>
             <v1Tls tlsVersion="TLSv1.2"/>
@@ -79,7 +79,7 @@
         <fileFilter>
             <fileExtension>pref</fileExtension>
         </fileFilter>
-    </federation>
+    </federation> -->
     <plugins/>
     <cluster/>
     <vbm/>

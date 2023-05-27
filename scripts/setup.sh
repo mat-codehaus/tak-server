@@ -213,6 +213,7 @@ chown -R $USER:$USER tak
 
 cp ./scripts/configureInDocker1.sh ./tak/db-utils/configureInDocker.sh
 cp ./postgresql1.conf ./tak/postgresql.conf
+cp ./pg_hba.conf ./tak/db-utils/pg_hba.conf
 cp ./scripts/takserver-setup-db-1.sh ./tak/db-utils/takserver-setup-db.sh
 
 # This config uses a docker alias of postgresql://tak-database:5432/
@@ -280,6 +281,7 @@ ORGANIZATIONAL_UNIT=$orgunit
 EOF
 
 ### Runs through setup, starts both containers
+$DOCKER_COMPOSE build --no-cache
 $DOCKER_COMPOSE --file $DOCKERFILE up  --force-recreate -d
 
 ### Checking if the container is set up and ready to set the certificates
