@@ -21,7 +21,6 @@ services:
     env_file:
       - .env
     ports:
-      - "8080:8080"
       - "8087:8087"
       - "8443:8443"
       - "8444:8444"
@@ -29,11 +28,26 @@ services:
       - "8089:8089"
       - "9000:9000"
       - "9001:9001"
+      - "8080:8080"
+      - "8452:8452"
     networks:
       tak:
     depends_on:
       - db
     restart: always
+    labels:
+      # - "traefik.tcp.routers.tak.rule=HostSNI(`*`)"
+      # - "traefik.tcp.routers.tak.entrypoints=tak-tcp"
+      # - "traefik.tcp.routers.tak.service=tak-tcp-svc"
+      # - "traefik.tcp.services.mariadb-svc.loadbalancer.server.port=3306"
+      - traefik.enable=true
+      - traefik.http.routers.tak.entrypoints=websecure
+      - traefik.http.routers.tak.tls=true
+      - traefik.http.routers.tak.rule=Host(`dev.codehaus.co`) && Path(`/tak`)
+      # - traefik.http.services.tak.loadbalancer.server.port=8080
+      # - traefik.http.routers.tak.rule=Host(`dev.codehaus.co`) && Path(`/tak2`)
+      - traefik.http.services.tak.loadbalancer.server.port=8446
+      - "traefik.http.routers.tak.tls.options.backend.insecureskipverify=true"
 volumes:
   db_data:
 networks:
