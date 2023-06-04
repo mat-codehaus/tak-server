@@ -22,9 +22,10 @@ services:
       - .env
     ports:
       - "8087:8087"
-      - "8443:8443"
+      # - "8443:8443"
       - "8444:8444"
       - "8446:8446"
+      - "8447:8447"
       - "8089:8089"
       - "9000:9000"
       - "9001:9001"
@@ -34,21 +35,37 @@ services:
       tak:
     depends_on:
       - db
+    volumes:
+      - "./tak:/opt/tak:z"
     restart: always
     labels:
-      # - "traefik.tcp.routers.tak.rule=HostSNI(`*`)"
-      # - "traefik.tcp.routers.tak.entrypoints=tak-tcp"
-      # - "traefik.tcp.routers.tak.service=tak-tcp-svc"
-      # - "traefik.tcp.services.mariadb-svc.loadbalancer.server.port=3306"
+      - "traefik.tcp.routers.tak-tcp.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.tak-tcp.entrypoints=tak-tcp"
+      # - "traefik.tcp.routers.tak-tcp.service=tak-tcp-svc"
+      - "traefik.tcp.services.tak-tcp.loadbalancer.server.port=8087"
+      - traefik.http.routers.tak-tcp.tls=true
+      - traefik.http.routers.tak-tcp.tls.certresolver=myresolver
+
       - traefik.enable=true
       - traefik.http.routers.tak.entrypoints=websecure
       - traefik.http.routers.tak.tls=true
-      - traefik.http.routers.tak.rule=Host(`dev.codehaus.co`) && Path(`/tak`)
-      # - traefik.http.services.tak.loadbalancer.server.port=8080
-      # - traefik.http.routers.tak.rule=Host(`dev.codehaus.co`) && Path(`/tak2`)
+      - traefik.http.routers.tak.rule=Host(`tak.codehaus.co`)
+      # && PathPrefix(`/tak`)
+      - traefik.http.routers.tak.tls.certresolver=myresolver 
       - traefik.http.services.tak.loadbalancer.server.port=8446
-      - "traefik.http.routers.tak.tls.options.backend.insecureskipverify=true"
+      # - "traefik.http.routers.tak.middlewares=tak-stripprefix"
+      # - "traefik.http.middlewares.tak-stripprefix.stripprefix.prefixes=/tak"
+      # - "traefik.http.middlewares.tak.stripprefix.forceSlash=false"
+      # - "traefik.http.routers.tak.middlewares=tak-addprefix"
+      # - "traefik.http.middlewares.tak-addprefix.addprefix.prefix=tak/"
+      # - "traefik.http.routers.tak.middlewares=tak-replacepath"
+      # - "traefik.http.middlewares.tak-replacepath.replacepath.path="
+      # - "traefik.http.routers.tak.middlewares=add-base-path@file"
+      - traefik.http.services.tak.loadbalancer.server.scheme=https
+
 volumes:
   db_data:
 networks:
   tak:
+    name: tak
+    external: true
