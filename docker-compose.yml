@@ -22,6 +22,7 @@ services:
       - .env
     ports:
       - "8087:8087"
+      - "8088:8088"
       # - "8443:8443"
       - "8444:8444"
       - "8446:8446"
@@ -42,9 +43,11 @@ services:
       - "traefik.tcp.routers.tak-tcp.rule=HostSNI(`*`)"
       - "traefik.tcp.routers.tak-tcp.entrypoints=tak-tcp"
       # - "traefik.tcp.routers.tak-tcp.service=tak-tcp-svc"
-      - "traefik.tcp.services.tak-tcp.loadbalancer.server.port=8087"
-      - traefik.http.routers.tak-tcp.tls=true
-      - traefik.http.routers.tak-tcp.tls.certresolver=myresolver
+      - "traefik.tcp.services.tak-tcp.loadbalancer.server.port=8088"
+      # - traefik.tcp.routers.tak-tcp.tls=true
+      # - traefik.tcp.routers.tak-tcp.tls.certresolver=myresolver
+      # - traefik.tcp.routers.tak-tcp.tls.passthrough=true
+      # - traefik.tcp.services.tak-tcp.loadbalancer.server.scheme=https
 
       - traefik.enable=true
       - traefik.http.routers.tak.entrypoints=websecure
