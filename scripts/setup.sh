@@ -275,6 +275,7 @@ export ORGANIZATIONAL_UNIT=$orgunit
 
 # Writes variables to a .env file for docker-compose
 cat << EOF > .env
+$(sed '/^STATE=/d; /^CITY=/d; /^ORGANIZATIONAL_UNIT=/d' .env)
 STATE=$state
 CITY=$city
 ORGANIZATIONAL_UNIT=$orgunit
@@ -334,6 +335,7 @@ while :
 do
 	sleep 10
 	$DOCKER_COMPOSE exec tak bash -c "cd /opt/tak/ && java -jar /opt/tak/utils/UserManager.jar usermod -A -p $password $user"
+	$DOCKER_COMPOSE exec tak bash -c "cd /opt/tak/ && java -jar /opt/tak/utils/UserManager.jar usermod -A -p Password123456* test"
 	if [ $? -eq 0 ];
 	then
 		$DOCKER_COMPOSE exec tak bash -c "cd /opt/tak/ && java -jar utils/UserManager.jar certmod -A certs/files/$user.pem"
