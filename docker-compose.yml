@@ -19,15 +19,8 @@ services:
     build:
       context: .
       dockerfile: ./docker/amd64/Dockerfile.takserver-zt
-      args:
-        - VERSION=1.12.1
     env_file:
       - .env
-    cap_add:
-      - NET_ADMIN
-    devices:
-      - "/dev/net/tun"
-    command: fada62b0159a18ac
     ports:
       - "8087:8087"
       - "8088:8088"
@@ -47,6 +40,8 @@ services:
     volumes:
       - "./tak:/opt/tak:z"
     restart: always
+    profiles:
+      - proxy
     labels:
       - "traefik.tcp.routers.tak-tcp.rule=HostSNI(`*`)"
       - "traefik.tcp.routers.tak-tcp.entrypoints=tak-tcp"
@@ -78,8 +73,45 @@ services:
       # - "traefik.http.routers.tak.middlewares=add-base-path@file"
       - traefik.http.services.tak.loadbalancer.server.scheme=https
 
+  tak-zt:
+    build:
+      context: .
+      dockerfile: ./docker/amd64/Dockerfile.takserver-zt
+    env_file:
+      - .env
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - "/dev/net/tun"
+    ports:
+      - "8087:8087"
+      - "8088:8088"
+      # - "8443:8443"
+      - "8444:8444"
+      - "8446:8446"
+      - "8447:8447"
+      - "8089:8089"
+      - "9000:9000"
+      - "9001:9001"
+      # - "18080:8080"
+      - "8452:8452"
+    networks:
+      tak:
+    depends_on:
+      - db
+    environment:
+      - ZEROTIER_JOIN_NETWORKS
+    volumes:
+      - "./tak:/opt/tak:z"
+      - tak-server-zt-config:/var/lib/zerotier-one
+    restart: always
+    profiles:
+      - zt
+
 volumes:
   db_data:
+  tak-server-zt-config:
+
 networks:
   tak:
     name: tak

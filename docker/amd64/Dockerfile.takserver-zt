@@ -1,25 +1,16 @@
+FROM codehausau/zerotier-docker:1.12.1 as zerotier
+
+# Use the official Node.js image as the base image
 FROM openjdk:11-jdk-bullseye
+
+COPY --from=zerotier /usr/sbin/zero* /usr/sbin/
+COPY --from=zerotier /entrypoint.sh /entrypoint.sh
+
 RUN apt update && \
 	apt-get install -y emacs-nox net-tools netcat vim
 
+COPY ./docker/amd64/run-service.sh /run-service.sh
 
-# Install ZeroTier.
-ARG VERSION
-
-RUN apt-get update -qq && apt-get install curl gpg -y
-RUN mkdir -p /usr/share/zerotier && \
-    curl -o /usr/share/zerotier/tmp.asc "https://download.zerotier.com/contact%40zerotier.com.gpg" && \
-    gpg --no-default-keyring --keyring /usr/share/zerotier/zerotier.gpg --import /usr/share/zerotier/tmp.asc && \
-    rm -f /usr/share/zerotier/tmp.asc && \
-    echo "deb [signed-by=/usr/share/zerotier/zerotier.gpg] http://download.zerotier.com/debian/bullseye bullseye main" > /etc/apt/sources.list.d/zerotier.list
-
-RUN apt-get update -qq && apt-get install zerotier-one=${VERSION} curl iproute2 net-tools iputils-ping openssl libssl1.1 -y
-RUN rm -rf /var/lib/zerotier-one
-
-COPY ./docker/amd64/entrypoint.sh /entrypoint.sh
-RUN chmod 755 /entrypoint.sh
-
-
-# ENTRYPOINT ["/bin/bash", "-c", "/opt/tak/configureInDocker.sh init &>> /opt/tak/logs/takserver.log"]
 CMD []
-ENTRYPOINT ["/entrypoint.sh"]
+# ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "-c", "/entrypoint.sh"]
