@@ -282,9 +282,9 @@ ORGANIZATIONAL_UNIT=$orgunit
 EOF
 
 ### Runs through setup, starts both containers
+export ZEROTIER_JOIN_NETWORKS=
 $DOCKER_COMPOSE build --no-cache
-$DOCKER_COMPOSE --file $DOCKERFILE up  --force-recreate -d
-
+$DOCKER_COMPOSE --file $DOCKERFILE up --force-recreate -d
 ### Checking if the container is set up and ready to set the certificates
 
 while :

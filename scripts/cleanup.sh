@@ -14,6 +14,6 @@ rm -rf tak
 rm -rf /tmp/takserver
 
 # Comment me out to save yourself rebuilding........
-docker image rm tak-server_db --force
-docker image rm tak-server_tak --force
+docker image rm tak-server-configurator-db --force
+docker image rm tak-server-configurator-tak --force
 docker volume rm tak-server-configurator_db_data

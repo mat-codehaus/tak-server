@@ -7,7 +7,9 @@ COPY --from=zerotier /usr/sbin/zero* /usr/sbin/
 COPY --from=zerotier /entrypoint.sh /entrypoint.sh
 
 RUN apt update && \
-	apt-get install -y emacs-nox net-tools netcat vim
+	apt-get install -y emacs-nox net-tools netcat vim && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY ./docker/amd64/run-service.sh /run-service.sh
 
