@@ -1,0 +1,16 @@
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y pip python3-venv openjdk-17-jdk git
+RUN pip install pipx
+
+# Set JAVA_HOME environment variable
+ENV JAVA_HOME /usr/lib/jvm/java-17-openjdk-amd64
+
+WORKDIR /build
+ARG RELEASE_VERSION=5.0-RELEASE-30
+
+RUN git clone  --branch ${RELEASE_VERSION} --depth 1 https://github.com/TAK-Product-Center/Server.git
+
+RUN export JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8" && \
+  cd /build/Server/src && \
+  ./gradlew buildDocker

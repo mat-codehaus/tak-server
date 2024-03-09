@@ -283,7 +283,7 @@ EOF
 
 ### Runs through setup, starts both containers
 export ZEROTIER_JOIN_NETWORKS=
-$DOCKER_COMPOSE build --no-cache
+$DOCKER_COMPOSE build
 $DOCKER_COMPOSE --file $DOCKERFILE up --force-recreate -d
 ### Checking if the container is set up and ready to set the certificates
 
@@ -335,7 +335,7 @@ while :
 do
 	sleep 10
 	$DOCKER_COMPOSE exec tak bash -c "cd /opt/tak/ && java -jar /opt/tak/utils/UserManager.jar usermod -A -p $password $user"
-	$DOCKER_COMPOSE exec tak bash -c "cd /opt/tak/ && java -jar /opt/tak/utils/UserManager.jar usermod -A -p Password123456* test"
+	# $DOCKER_COMPOSE exec tak bash -c "cd /opt/tak/ && java -jar /opt/tak/utils/UserManager.jar usermod -A -p Password123456* test"
 	if [ $? -eq 0 ];
 	then
 		$DOCKER_COMPOSE exec tak bash -c "cd /opt/tak/ && java -jar utils/UserManager.jar certmod -A certs/files/$user.pem"

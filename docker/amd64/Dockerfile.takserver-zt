@@ -1,7 +1,7 @@
 FROM codehausau/zerotier-docker:1.12.1 as zerotier
 
 # Use the official Node.js image as the base image
-FROM openjdk:11-jdk-bullseye
+FROM openjdk:17-jdk-bullseye
 
 COPY --from=zerotier /usr/sbin/zero* /usr/sbin/
 COPY --from=zerotier /entrypoint.sh /entrypoint.sh
