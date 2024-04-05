@@ -57,4 +57,4 @@ volumes:
 networks:
   tak:
     name: tak
-    external: true
+    # external: true
