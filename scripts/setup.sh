@@ -247,31 +247,43 @@ sed -i "s/takserver.jks/$IP.jks/g" tak/CoreConfig.xml
 sed -i "s/MemTotal/MemFree/g" tak/setenv.sh
 
 ## Set variables for generating CA and client certs
-printf $warning "SSL setup. Hit enter (x3) to accept the defaults:\n"
-read -p "State (for cert generation). Default [state] :" state
-read -p "City (for cert generation). Default [city]:" city
-read -p "Organizational Unit (for cert generation). Default [org]:" orgunit
+## Set variables for generating CA and client certs
+printf $warning "SSL setup. Hit enter (x3) to accept the defaults (will accept defaults after 30 seconds):\n"
 
-if [ -z "$state" ];
-then
-	state="state"
+# Set default values
+default_state="state"
+default_city="city"
+default_orgunit="org"
+
+# Wait for input with a 30-second timeout for state
+read -t 30 -p "State (for cert generation). Default [state] :" state
+if [ $? -ne 0 ]; then
+    state=$default_state
+	city=$default_city
+	orgunit=$default_orgunit
+else
+	if [ -z "$state" ]; then
+        state=$default_state
+    fi
+
+    # If state input is provided, wait indefinitely for the other inputs
+    read -p "City (for cert generation). Default [city]:" city
+    if [ -z "$city" ]; then
+        city=$default_city
+    fi
+
+    read -p "Organizational Unit (for cert generation). Default [org]:" orgunit
+    if [ -z "$orgunit" ]; then
+        orgunit=$default_orgunit
+    fi
 fi
 
-if [ -z "$city" ];
-then
-	city="city"
-fi
-
-if [ -z "$orgunit" ];
-then
-	orgunit="org"
-fi
+printf "Using State: %s, City: %s, Organizational Unit: %s\n" "$state" "$city" "$orgunit"
 
 # Update local env
 export STATE=$state
 export CITY=$city
 export ORGANIZATIONAL_UNIT=$orgunit
-
 
 # Writes variables to a .env file for docker-compose
 cat << EOF > .env

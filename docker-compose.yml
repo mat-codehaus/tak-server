@@ -6,8 +6,8 @@ services:
       context: .
       dockerfile: ./docker/amd64/Dockerfile.takserver-db
     volumes:
-      # - "db_data:/var/lib/postgresql/data"
-      - "./tak-db-data:/var/lib/postgresql/data"
+      - "db_data:/var/lib/postgresql/data"
+      # - "./tak-db-data:/var/lib/postgresql/data"
       - "./tak:/opt/tak:z"
     networks:
       tak:
@@ -30,11 +30,11 @@ services:
     ports:
       - "8087:8087"
       - "8088:8088"
+      - "8089:8089"
       # - "8443:8443"
       - "8444:8444"
       - "8446:8446"
       - "8447:8447"
-      - "8089:8089"
       - "9000:9000"
       - "9001:9001"
       - "8080:8080"
@@ -50,39 +50,9 @@ services:
       # - tak-server-zt-config:/var/lib/zerotier-one
       - ./zerotier-config/:/var/lib/zerotier-one
     restart: always
-    labels:
-      - "traefik.tcp.routers.tak-tcp.rule=HostSNI(`*`)"
-      - "traefik.tcp.routers.tak-tcp.entrypoints=tak-tcp"
-      # - "traefik.tcp.routers.tak-tcp.service=tak-tcp-svc"
-      - "traefik.tcp.services.tak-tcp.loadbalancer.server.port=8088"
-      # - traefik.tcp.routers.tak-tcp.tls=true
-      # - traefik.tcp.routers.tak-tcp.tls.certresolver=myresolver
-      # - traefik.tcp.routers.tak-tcp.tls.passthrough=true
-      # - traefik.tcp.services.tak-tcp.loadbalancer.server.scheme=https
-
-      - traefik.http.routers.tak-data.entrypoints=web
-      - traefik.http.routers.tak-data.rule=Host(`${TRAEFIK_HOST}`)
-      # - traefik.http.services.tak-data.loadbalancer.server.port=18080
-
-      - traefik.enable=true
-      - traefik.http.routers.tak.entrypoints=websecure
-      - traefik.http.routers.tak.tls=true
-      - traefik.http.routers.tak.rule=Host(`${TRAEFIK_HOST}`)
-      # && PathPrefix(`/tak`)
-      - traefik.http.routers.tak.tls.certresolver=myresolver 
-      - traefik.http.services.tak.loadbalancer.server.port=8446
-      # - "traefik.http.routers.tak.middlewares=tak-stripprefix"
-      # - "traefik.http.middlewares.tak-stripprefix.stripprefix.prefixes=/tak"
-      # - "traefik.http.middlewares.tak.stripprefix.forceSlash=false"
-      # - "traefik.http.routers.tak.middlewares=tak-addprefix"
-      # - "traefik.http.middlewares.tak-addprefix.addprefix.prefix=tak/"
-      # - "traefik.http.routers.tak.middlewares=tak-replacepath"
-      # - "traefik.http.middlewares.tak-replacepath.replacepath.path="
-      # - "traefik.http.routers.tak.middlewares=add-base-path@file"
-      - traefik.http.services.tak.loadbalancer.server.scheme=https
-
-# volumes:
-#   db_data:
+  
+volumes:
+  db_data:
 
 networks:
   tak:
