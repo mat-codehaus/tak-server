@@ -293,8 +293,24 @@ CITY=$city
 ORGANIZATIONAL_UNIT=$orgunit
 EOF
 
+# Define the file path
+ENV_FILENAME=".env"
+
+# Check if .env file exists
+if [ -f "$ENV_FILENAME" ]; then
+    # Search for ZEROTIER_JOIN_NETWORKS in the file
+    if grep -q "ZEROTIER_JOIN_NETWORKS" "$ENV_FILENAME"; then
+        printf $warning "Pausing to let you know ZEROTIER_JOIN_NETWORKS variable is set - hence this is a ZeroTier setup...\n"
+        # Wait for 5 seconds
+        sleep 5
+    else
+        printf "ZEROTIER_JOIN_NETWORKS variable not found.\n"
+    fi
+else
+    printf $warning "File $ENV_FILENAME does not exist.\n"
+fi
+
 ### Runs through setup, starts both containers
-export ZEROTIER_JOIN_NETWORKS=
 $DOCKER_COMPOSE build
 $DOCKER_COMPOSE --file $DOCKERFILE up --force-recreate -d
 ### Checking if the container is set up and ready to set the certificates
