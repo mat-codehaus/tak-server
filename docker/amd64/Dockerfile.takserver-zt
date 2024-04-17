@@ -1,4 +1,4 @@
-FROM codehausau/zerotier-docker:1.12.1 as zerotier
+FROM codehausau/zerotier-docker:1.12.3 as zerotier
 
 # Use the official Node.js image as the base image
 FROM openjdk:17-jdk-bullseye
